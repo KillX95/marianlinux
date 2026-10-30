@@ -1,9 +1,701 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Marian Linux App Shop</title>
-  </head>
-  <body>
-    <h>hello</h>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Marian App Shop ">
+  <title>Marian Linux</title>
+
+  <!-- Tout est dans ce seul fichier : aucun serveur, aucune dépendance. -->
+  <link rel="icon" href="logo.png">
+
+  <style>
+    :root {
+      --bg: #161616;
+      --surface: #161616;
+      --ink: #dddddd;
+      --muted: #ffffff;
+      --line: rgb(255, 245, 245);
+      --radius: 32px;
+      --shadow: 0 24px 50px -30px rgb(29, 56, 129);
+      --logo: url("logo.png");
+      --logowriter: url("logo.png");
+  }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Décor de fond */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+    }
+
+    .blob--1 {
+      width: 480px;
+      height: 480px;
+      top: -180px;
+      left: -140px;
+      background: #cfe0ff;
+    }
+
+    .blob--2 {
+      width: 440px;
+      height: 440px;
+      right: -160px;
+      bottom: -180px;
+      background: #f3d9ff;
+    }
+
+    .blob--3 {
+      width: 380px;
+      height: 380px;
+      top: 38%;
+      left: 58%;
+      background: #d6f7ee;
+      opacity: 0.45;
+    }
+
+    /* Mise en page */
+    .page {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 44px 24px 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 72px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand__logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background-color: var(--surface);
+      background-image: var(--logo);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 30px 30px;
+      box-shadow: 0 10px 24px -14px rgba(35, 55, 110, 0.5);
+    }
+
+    .brand__name {
+      font-weight: 650;
+      font-size: 1.02rem;
+      letter-spacing: -0.01em;
+    }
+
+    .topbar__tag {
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: #161616;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 550;
+      backdrop-filter: blur(8px);
+    }
+
+    /* En-tête */
+    .hero {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #161616;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 26px -22px rgba(35, 55, 110, 0.6);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 550;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34c58f;
+      box-shadow: 0 0 0 4px rgba(52, 197, 143, 0.16);
+    }
+
+    .hero h1 {
+      margin: 24px 0 18px;
+      font-size: clamp(2.3rem, 5.6vw, 3.7rem);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      font-weight: 720;
+    }
+
+    .hero__accent {
+      background: linear-gradient(120deg, #5b8cff 0%, #9b6bff 52%, #3ec7b0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 46ch;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    /* Recherche */
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: min(520px, 100%);
+      margin: 32px auto 0;
+      padding: 6px 8px 6px 18px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transition: border-color 0.25s ease;
+    }
+
+    .search:focus-within {
+      border-color: color-mix(in srgb, #5b8cff 60%, white);
+    }
+
+    .search__icon {
+      flex: none;
+      color: var(--muted);
+      opacity: 0.8;
+    }
+
+    .search__input {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .search__input::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    .search__input::placeholder {
+      color: var(--muted);
+      opacity: 0.65;
+    }
+
+    .search__clear {
+      flex: none;
+      display: none;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .search__clear:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .search.has-value .search__clear {
+      display: block;
+    }
+
+    .card.is-hidden {
+      display: none;
+    }
+
+    .cards__empty {
+      display: none;
+      grid-column: 1 / -1;
+      padding: 30px 24px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .cards__empty.is-visible {
+      display: block;
+    }
+
+    /* Cartes */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 52px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 300px;
+      padding: 28px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      color: #ffffff;
+      text-decoration: none;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+        box-shadow 0.35s ease, border-color 0.35s ease;
+      animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+      animation-delay: calc(var(--i, 0) * 75ms);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Halo qui suit le curseur */
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: radial-gradient(
+        260px circle at var(--mx, 50%) var(--my, 0%),
+        color-mix(in srgb, var(--accent) 16%, transparent),
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+      box-shadow: 0 34px 60px -32px rgba(35, 55, 110, 0.45);
+    }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    .card:active {
+      transform: translateY(-2px) scale(0.995);
+    }
+
+    .card:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 50%, white);
+      outline-offset: 3px;
+    }
+
+    /* CARD ICONS */
+
+    .card__icon {
+      width: 68px;
+      height: 68px;
+      margin-bottom: 26px;
+      border-radius: 22px;
+      background-color: var(--tint, #eef3ff);
+      background-image: var(--logowriter);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 40px 40px;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+
+    .card:hover .card__icon {
+      transform: scale(1.06) rotate(-3deg);
+    }
+
+    /* FINISH */
+
+    .card__title {
+      margin: 0 0 10px;
+      font-size: 1.32rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .card__desc {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+
+    .card__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+
+    .card__cta svg {
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+
+    .card:hover .card__cta svg {
+      transform: translateX(4px);
+    }
+
+    /* Effet d'onde au clic */
+    .ripple {
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.18;
+      transform: scale(0);
+      pointer-events: none;
+      animation: ripple 0.65s ease-out forwards;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Pied de page */
+    .footer {
+      margin-top: 56px;
+      text-align: center;
+    }
+
+    .footer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topbar {
+        margin-bottom: 56px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 32px 18px 32px;
+      }
+
+      .topbar {
+        margin-bottom: 44px;
+      }
+
+      .topbar__tag {
+        display: none;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 36px;
+      }
+
+      .card {
+        min-height: 300px;
+        padding: 24px;
+        border-radius: 26px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 9vw, 2.6rem);
+      }
+
+      .hero p {
+        font-size: 0.96rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+  </div>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true"></span>
+        <span class="brand__name">Marian Linux</span>
+      </div>
+      <span class="topbar__tag">Download Page</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <span class="hero__badge">
+          <span class="hero__dot" aria-hidden="true"></span>
+          Choose your version
+        </span>
+        <h1>The best os for<br><span class="hero__accent">YOU</span></h1>
+      </section>
+
+      <section class="search" aria-label="Recherche">
+        <svg class="search__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="search" class="search__input" type="search" autocomplete="off"
+               placeholder="Rechercher une version (nom ou mot-clé)"
+               aria-label="Rechercher une version par nom ou mot-clé">
+        <button class="search__clear" type="button" aria-label="Effacer la recherche">×</button>
+      </section>
+
+      <section class="cards" aria-label="Apps">
+        <!-- Writer -->
+        <a class="card" href="https://github.com/KillX95/marianlinux/releases/tag/store"
+           data-name="Marian App Shop"
+           data-keywords="App Shop Marian Store Software Application"
+           style="--accent: #5b8cff; --tint: #edf3ff; --i: 0;">
+          <span class="card__icon" aria-hidden="true"></span>
+          <h2 class="card__title">Marian App Shop</h2>
+          <p class="card__desc">The best app store for Marian Linux.</p>
+          <span class="card__cta">
+            Download
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+
+        <p class="cards__empty" data-search-empty>
+          Aucune version ne correspond à « <span data-search-query></span> ».
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year">2026</span> Marian Linux.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var cards = document.querySelectorAll(".card");
+
+      function createRipple(card, x, y) {
+        var rect = card.getBoundingClientRect();
+        var size = Math.max(rect.width, rect.height);
+        var ripple = document.createElement("span");
+
+        ripple.className = "ripple";
+        ripple.style.width = size + "px";
+        ripple.style.height = size + "px";
+        ripple.style.left = x - size / 2 + "px";
+        ripple.style.top = y - size / 2 + "px";
+
+        card.appendChild(ripple);
+        ripple.addEventListener("animationend", function () {
+          ripple.remove();
+        });
+      }
+
+      cards.forEach(function (card) {
+        // Halo lumineux qui suit le curseur.
+        card.addEventListener("mousemove", function (event) {
+          var rect = card.getBoundingClientRect();
+          card.style.setProperty("--mx", event.clientX - rect.left + "px");
+          card.style.setProperty("--my", event.clientY - rect.top + "px");
+        });
+
+        // Clic sur une carte : direction Google.
+        card.addEventListener("click", function (event) {
+          // Nouvel onglet via Ctrl/Cmd/Shift : on laisse le navigateur faire.
+          if (
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey ||
+            event.button !== 0
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+
+          var rect = card.getBoundingClientRect();
+          var isKeyboard = event.detail === 0;
+          var x = isKeyboard ? rect.width / 2 : event.clientX - rect.left;
+          var y = isKeyboard ? rect.height / 2 : event.clientY - rect.top;
+
+          createRipple(card, x, y);
+
+          var url = card.dataset.url || card.getAttribute("href");
+          if (url) {
+            window.setTimeout(function () {
+              window.location.href = url;
+            }, 150);
+          }
+        });
+      });
+
+      var year = document.getElementById("year");
+      if (year) {
+        year.textContent = new Date().getFullYear();
+      }
+
+      /* ---- Recherche des cartes (nom + mots clés) ---- */
+      var searchInput = document.getElementById("search");
+      var searchBox = searchInput ? searchInput.closest(".search") : null;
+      var searchClear = document.querySelector(".search__clear");
+      var emptyState = document.querySelector("[data-search-empty]");
+      var emptyQuery = document.querySelector("[data-search-query]");
+
+      // Minuscules + suppression des accents : « Léger » = « leger ».
+      function normalize(value) {
+        return (value || "")
+          .toString()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+
+      // Pour chaque carte : le texte dans lequel on cherche.
+      var searchIndex = Array.prototype.map.call(cards, function (card) {
+        var title = card.querySelector(".card__title");
+        var name = card.dataset.name || (title ? title.textContent : "");
+        var keywords = card.dataset.keywords || "";
+        return { card: card, text: normalize(name + " " + keywords) };
+      });
+
+      function applySearch() {
+        if (!searchInput) {
+          return;
+        }
+
+        var terms = normalize(searchInput.value).split(/\s+/).filter(Boolean);
+        var visible = 0;
+
+        searchIndex.forEach(function (entry) {
+          // Tous les mots tapés doivent être présents (peu importe l'ordre).
+          var match = terms.every(function (term) {
+            return entry.text.indexOf(term) !== -1;
+          });
+
+          entry.card.classList.toggle("is-hidden", !match);
+          if (match) {
+            visible += 1;
+          }
+        });
+
+        if (emptyState) {
+          emptyState.classList.toggle("is-visible", visible === 0);
+        }
+        if (emptyQuery) {
+          emptyQuery.textContent = searchInput.value.trim();
+        }
+        if (searchBox) {
+          searchBox.classList.toggle("has-value", searchInput.value !== "");
+        }
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener("input", applySearch);
+
+        // Échap : vide la recherche.
+        searchInput.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            searchInput.value = "";
+            applySearch();
+          }
+        });
+      }
+
+      if (searchClear) {
+        searchClear.addEventListener("click", function () {
+          searchInput.value = "";
+          applySearch();
+          searchInput.focus();
+        });
+      }
+
+      applySearch();
+    })();
+  </script>
+</body>
 </html>
