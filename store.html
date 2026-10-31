@@ -20,6 +20,7 @@
       --shadow: 0 24px 50px -30px rgb(29, 56, 129);
       --logo: url("logo.png");
       --logowriter: url("logo.png");
+      --logovlc: url("vlc.png");
   }
 
     * {
@@ -365,6 +366,19 @@
       transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
     }
 
+    .card__icon {
+      width: 68px;
+      height: 68px;
+      margin-bottom: 26px;
+      border-radius: 22px;
+      background-color: var(--tint, #eef3ff);
+      background-image: var(--logovlc);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 40px 40px;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+
     .card:hover .card__icon {
       transform: scale(1.06) rotate(-3deg);
     }
@@ -546,7 +560,7 @@
            data-name="VLC"
            data-keywords="Media Player Video Music VLC OpenSource"
            style="--accent: #5b8cff; --tint: #edf3ff; --i: 0;">
-          <span class="card__icon" aria-hidden="true"></span>
+          <span class="card__icon_vlc" aria-hidden="true"></span>
           <h2 class="card__title">VLC</h2>
           <p class="card__desc">An open source media player for Linux, MacOS X and Windows.</p>
           <span class="card__cta">
