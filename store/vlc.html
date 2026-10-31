@@ -4,58 +4,58 @@
 <p>&nbsp;</p>
 <h2>How to install ?</h2>
 <p>Open Alacritty and paste (CTRL + SHIFT + V) sudo pacman -S vlc</p>
-<!-- Le bloc de code -->
+
+<!-- Le bloc de code à copier -->
 <pre><code id="monCode">
-    sudo pacman -S vlc
+    sudo pacman -S vlc    
 </code></pre>
 
-<!-- Le bouton de copie -->
-<button onclick="copierCode()">Copy command</button>
+<!-- Le bouton qui déclenche l'action -->
+<button onclick="copierLeCode()">Copy command</button>
 
 <script>
-function copierCode() {
-    // 1. Récupération du texte à copier
+function copierLeCode() {
+    // 1. Récupération exacte du texte
     var texteACopier = document.getElementById("monCode").innerText;
 
-    // 2. Méthode moderne (HTTPS / Localhost requis)
+    // 2. Tentative avec la méthode moderne (HTTPS / Localhost)
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(texteACopier)
             .then(function() {
-                alert("Command copied !");
+                alert("Code Copied !");
             })
-            .catch(function(erreur) {
-                console.error("Copy error : ", erreur);
-                executerCopieSecours(texteACopier);
+            .catch(function(err) {
+                console.error("Copie error:", err);
+                methodeSecours(texteACopier);
             });
     } else {
-        // 3. Méthode de secours (Fonctionne partout, même en HTTP classique ou fichier local)
-        executerCopieSecours(texteACopier);
+        // 3. Passage immédiat au plan B si on teste en local ou sur site non-sécurisé
+        methodeSecours(texteACopier);
     }
 }
 
-// Fonction de secours utilisant une zone de texte invisible temporaire
-function executerCopieSecours(texte) {
-    var zoneTexte Temporaire = document.createElement("textarea");
-    zoneTexteTemporaire.value = text;
-    // On positionne hors de l'écran pour que ce soit invisible
-    zoneTexteTemporaire.style.position = "fixed";
-    zoneTexteTemporaire.style.top = "-9999px";
+// Fonction de secours universelle (sans aucun espace brisé)
+function methodeSecours(texte) {
+    var zoneTemporaire = document.createElement("textarea");
+    zoneTemporaire.value = texte;
+    zoneTemporaire.style.position = "fixed";
+    zoneTemporaire.style.top = "-9999px";
     
-    document.body.appendChild(zoneTexteTemporaire);
-    zoneTexteTemporaire.select();
+    document.body.appendChild(zoneTemporaire);
+    zoneTemporaire.select();
     
     try {
-        var succes = document.execCommand("copy");
-        if (succes) {
+        var reussi = document.execCommand("copy");
+        if (reussi) {
             alert("Command copied!");
         } else {
-            alert("Can't copy code");
+            alert("Copy error.");
         }
-    } catch (erreur) {
-        console.error("Emergency error: ", erreur);
-        alert("Copy error");
+    } catch (err) {
+        console.error("Fatal Error:", err);
+        alert("Copy Error");
     }
     
-    document.body.removeChild(zoneTexteTemporaire);
+    document.body.removeChild(zoneTemporaire);
 }
 </script>
