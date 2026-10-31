@@ -4,22 +4,58 @@
 <p>&nbsp;</p>
 <h2>How to install ?</h2>
 <p>Open Alacritty and paste (CTRL + SHIFT + V) sudo pacman -S vlc</p>
-<!-- Le bloc de code avec un identifiant unique -->
+<!-- Le bloc de code -->
 <pre><code id="monCode">
-sudo pacman  -S vlc
+    sudo pacman -S vlc
 </code></pre>
 
-<!-- Le bouton qui déclenche la copie -->
+<!-- Le bouton de copie -->
 <button onclick="copierCode()">Copy command</button>
 
 <script>
 function copierCode() {
-    var texte A Copier = document.getElementById("monCode").innerText;
+    // 1. Récupération du texte à copier
+    var texteACopier = document.getElementById("monCode").innerText;
 
-    navigator.clipboard.writeText(texteACopier).then(function() {
-        alert("Command copied");
-    }).catch(function(erreur) {
-        console.error("Error while copy ", erreur);
-    });
+    // 2. Méthode moderne (HTTPS / Localhost requis)
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(texteACopier)
+            .then(function() {
+                alert("Command copied !");
+            })
+            .catch(function(erreur) {
+                console.error("Copy error : ", erreur);
+                executerCopieSecours(texteACopier);
+            });
+    } else {
+        // 3. Méthode de secours (Fonctionne partout, même en HTTP classique ou fichier local)
+        executerCopieSecours(texteACopier);
+    }
+}
+
+// Fonction de secours utilisant une zone de texte invisible temporaire
+function executerCopieSecours(texte) {
+    var zoneTexte Temporaire = document.createElement("textarea");
+    zoneTexteTemporaire.value = text;
+    // On positionne hors de l'écran pour que ce soit invisible
+    zoneTexteTemporaire.style.position = "fixed";
+    zoneTexteTemporaire.style.top = "-9999px";
+    
+    document.body.appendChild(zoneTexteTemporaire);
+    zoneTexteTemporaire.select();
+    
+    try {
+        var succes = document.execCommand("copy");
+        if (succes) {
+            alert("Command copied!");
+        } else {
+            alert("Can't copy code");
+        }
+    } catch (erreur) {
+        console.error("Emergency error: ", erreur);
+        alert("Copy error");
+    }
+    
+    document.body.removeChild(zoneTexteTemporaire);
 }
 </script>
