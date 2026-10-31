@@ -1,0 +1,25 @@
+<h1 class="demoTitle" style="text-align: center;"><strong><span style="color: #000000;">VLC</span></strong></h1>
+<h2>&nbsp;What is it ?</h2>
+<p>VLC media player is a free and open-source cross-platform multimedia player that plays most multimedia files as well as discs, devices, and network streaming protocols.<!--TgQPHd|||[]-->This is the official port of VLC media player to mobile and desktop platforms. VLC can play any video and audio files, as well as network streams, network shares and drives, and DVD ISOs.<!--TgQPHd|||[]-->&nbsp;&nbsp;VLC features a full audio player, with a complete database, an equalizer and filters, playing all weird audio formats.<!--TgQPHd|||[]-->VLC is intended for everyone, is totally free, has no ads, no in-app-purchases, no spying and is developed by passionate volunteers.</p>
+<p>&nbsp;</p>
+<h2>How to install ?</h2>
+<p>Open Alacritty and paste (CTRL + SHIFT + V) sudo pacman -S vlc</p>
+<!-- Le bloc de code avec un identifiant unique -->
+<pre><code id="monCode">
+sudo pacman  -S vlc
+</code></pre>
+
+<!-- Le bouton qui déclenche la copie -->
+<button onclick="copierCode()">Copy command</button>
+
+<script>
+function copierCode() {
+    var texte A Copier = document.getElementById("monCode").innerText;
+
+    navigator.clipboard.writeText(texteACopier).then(function() {
+        alert("Command copied");
+    }).catch(function(erreur) {
+        console.error("Error while copy ", erreur);
+    });
+}
+</script>
